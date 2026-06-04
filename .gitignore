@@ -1,0 +1,16 @@
+# Virtual environment
+env/
+venv/
+ENV/
+
+# Python bytecode/cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Databases
+db.sqlite3
+
+# Media files (Optional: if you don't want generated QR codes uploaded to GitHub)
+django_qr/media/*.png
