@@ -64,14 +64,9 @@
         <!-- QR Code Generator Card -->
         <div class="col-lg-6">
             <div class="glass-card h-100 d-flex flex-column">
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-3 border" style="width: 44px; height: 44px; font-size: 18px;">
-                        <i class="fa-solid fa-plus"></i>
-                    </div>
-                    <div>
-                        <h3 class="h5 mb-0">Create a QR Code</h3>
-                        <p class="text-muted small mb-0">Enter a label and any content to encode</p>
-                    </div>
+                <div class="mb-4">
+                    <h3 class="h5 mb-0">Create a QR Code</h3>
+                    <p class="text-muted small mb-0">Enter a label and any content to encode</p>
                 </div>
                 
                 <form action="{% url 'generate_qr_code' %}" method="POST" class="flex-grow-1 d-flex flex-column">
@@ -98,14 +93,9 @@
         <!-- Live Camera Scanner Card -->
         <div class="col-lg-6">
             <div class="glass-card h-100">
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-3 border" style="width: 44px; height: 44px; font-size: 18px;">
-                        <i class="fa-solid fa-camera"></i>
-                    </div>
-                    <div>
-                        <h3 class="h5 mb-0">Scan a QR Code</h3>
-                        <p class="text-muted small mb-0">Use your camera to read any QR code</p>
-                    </div>
+                <div class="mb-4">
+                    <h3 class="h5 mb-0">Scan a QR Code</h3>
+                    <p class="text-muted small mb-0">Use your camera to read any QR code</p>
                 </div>
 
                 <div id="reader" class="mb-3"></div>

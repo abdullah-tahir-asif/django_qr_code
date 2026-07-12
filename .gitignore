@@ -14,3 +14,5 @@ db.sqlite3
 
 # Media files (Optional: if you don't want generated QR codes uploaded to GitHub)
 django_qr/media/*.png
+
+media/
