@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile — QR Code Generator{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Override base centering for profile page */
+    .flex-grow-1 {
+        align-items: flex-start !important;
+    }
+
+    .profile-section {
+        width: 100%;
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+
+    /* Page header */
+    .page-header {
+        margin-bottom: 32px;
+    }
+    .page-header h1 {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 4px;
+    }
+    .page-header p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* QR grid */
+    .qr-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .qr-card {
+        background: #ffffff;
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .qr-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+        border-color: #cbd5e1;
+    }
+    .qr-card img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        padding: 16px;
+        background: #f8fafc;
+        display: block;
+    }
+    .qr-card-label {
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-main);
+        border-top: 1px solid var(--card-border);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+    }
+    .empty-state i {
+        font-size: 40px;
+        margin-bottom: 16px;
+        color: #cbd5e1;
+    }
+    .empty-state p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container profile-section">
+
+    <!-- Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Your QR Codes</h1>
+            <p>All the QR codes you've generated so far</p>
+        </div>
+        <a href="{% url 'generate_qr_code' %}" class="btn btn-gradient btn-sm px-4">
+            <i class="fa-solid fa-plus me-1"></i> New QR Code
+        </a>
+    </div>
+
+    <!-- QR Grid or Empty State -->
+    {% if qr_codes %}
+        <div class="qr-grid">
+            {% for qr_code in qr_codes %}
+            <div class="qr-card">
+                <img src="{{ qr_code.image.url }}" alt="QR Code for {{ qr_code.label }}">
+                <div class="qr-card-label" title="{{ qr_code.label }}">{{ qr_code.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fa-solid fa-qrcode"></i>
+            <p>You haven't generated any QR codes yet.</p>
+            <a href="{% url 'generate_qr_code' %}" class="btn btn-gradient btn-sm px-4">Generate your first one</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

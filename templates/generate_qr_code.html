@@ -1,131 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- bootstrap 5 cdn for css -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <!-- bootstrap 5 cdn for js -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+{% extends 'base.html' %}
 
-    <title>Generate QR Code for Digital Restaurant Menus</title>
-</head>
-<body>
+{% block title %}QR Code Generator - Generate QR for Anything{% endblock %}
 
-<!-- navbar -->
+{% block extra_head %}
+<style>
+    /* Clean styling for the html5-qrcode scanner elements */
+    #reader {
+        border: 1px solid var(--card-border) !important;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff !important;
+        padding: 20px 10px !important;
+    }
+    #reader__dashboard_section_csr button, 
+    #reader__dashboard_section_fsr button, 
+    #reader__camera_permission_button,
+    #reader__dashboard_section_swaplink {
+        background: var(--primary-color) !important;
+        border: 1px solid var(--primary-color) !important;
+        color: white !important;
+        padding: 8px 16px !important;
+        border-radius: 6px !important;
+        font-weight: 500 !important;
+        font-size: 13px !important;
+        margin: 10px 4px !important;
+        transition: all 0.2s ease !important;
+        box-shadow: none !important;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+    #reader__dashboard_section_csr button:hover, 
+    #reader__camera_permission_button:hover,
+    #reader__dashboard_section_swaplink:hover {
+        background: var(--primary-hover) !important;
+        border-color: var(--primary-hover) !important;
+    }
+    #reader select {
+        background-color: #ffffff !important;
+        border: 1px solid var(--input-border) !important;
+        border-radius: 6px !important;
+        color: var(--text-main) !important;
+        padding: 6px 10px !important;
+        font-size: 13px !important;
+        outline: none !important;
+        margin: 8px 0;
+    }
+    #reader__scan_region video {
+        border-radius: 6px;
+    }
+</style>
+{% endblock %}
 
-   <nav class="navbar bg-body-tertiary fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">QR Code Generator</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item">
-           <a href="{% url 'logout' %}" >Logout</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-        </ul>
-        <form class="d-flex mt-3" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
+{% block content %}
+<div class="container">
+    <div class="row mb-4 text-center text-lg-start align-items-center">
+        <div class="col-lg-8">
+            <h1 class="h2 fw-bold mb-1">QR Code Generator</h1>
+            <p class="text-muted mb-0">Generate a QR code for any URL, text, Wi-Fi credentials, contact info, or anything else.</p>
+        </div>
     </div>
-  </div>
-</nav>  
 
-
-
-
-    <!-- form --> 
-     <div class="container mt-5">
-     <h1 class="mb-4">Generate QR Code for Any thing</h1>
-     </div>
-
-     <div class="container mt-4" style="max-width: 500px; background-color: #f8f9fa; padding: 20px; border-radius: 5px; border: 1px solid #d3d3d3;">
+    <div class="row g-4">
+        <!-- QR Code Generator Card -->
+        <div class="col-lg-6">
+            <div class="glass-card h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-3 border" style="width: 44px; height: 44px; font-size: 18px;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5 mb-0">Create a QR Code</h3>
+                        <p class="text-muted small mb-0">Enter a label and any content to encode</p>
+                    </div>
+                </div>
+                
+                <form action="{% url 'generate_qr_code' %}" method="POST" class="flex-grow-1 d-flex flex-column">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.label.id_for_label }}" class="form-label">Label</label>
+                        {{ form.label }}
+                        <div class="form-text text-muted" style="font-size: 12px;">A short name to identify this QR code.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">Content</label>
+                        {{ form.content }}
+                        <div class="form-text text-muted" style="font-size: 12px;">Can be a URL, plain text, phone number, Wi-Fi config, or any data.</div>
+                    </div>
+                    <div class="mt-auto">
+                        <button type="submit" class="btn btn-gradient w-100" style="padding: 11px;">
+                            <i class="fa-solid fa-qrcode me-2"></i> Generate QR Code
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         
-      <form action="{% url 'generate_qr_code' %}" method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Generate QR Code</button>
-                    </form>
-     </div>
-               
-     
-<!--Qr code js logic -->
+        <!-- Live Camera Scanner Card -->
+        <div class="col-lg-6">
+            <div class="glass-card h-100">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-3 border" style="width: 44px; height: 44px; font-size: 18px;">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5 mb-0">Scan a QR Code</h3>
+                        <p class="text-muted small mb-0">Use your camera to read any QR code</p>
+                    </div>
+                </div>
 
-
-
-
-
-     
-<div class="qr-scanner-section">
-    <h3>QR Code Scanner</h3>
-    
-    <div id="reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
-    
-  
-    <div id="scan-result" style="display: none; margin-top: 15px;">
-        <p><strong>Scanned Data:</strong> <span id="result-text"></span></p>
+                <div id="reader" class="mb-3"></div>
+                
+                <div id="scan-result" style="display: none;">
+                    <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success rounded-3 p-3 d-flex align-items-start gap-3 mb-0">
+                        <div class="bg-success bg-opacity-20 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; flex-shrink: 0; font-size: 13px;">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <h6 class="fw-bold mb-1" style="font-size: 14px;">Scan Successful!</h6>
+                            <p class="mb-0 text-break text-muted small">
+                                <strong>Result:</strong> 
+                                <span id="result-text" class="text-dark"></span>
+                            </p>
+                            <a id="result-link" href="#" target="_blank" class="text-success fw-semibold small" style="display:none;">Open Link &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-     
+{% endblock %}
 
-
+{% block extra_js %}
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>  
+const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
 
-
-const scanner = new Html5QrcodeScanner("reader", { 
-    fps: 10,       
-    qrbox: 250     
-});
-
-function onScanSuccess(decodedText, decodedResult) {
-
+function onScanSuccess(decodedText) {
     scanner.clear(); 
+
+    const resultText = document.getElementById('result-text');
+    const resultLink = document.getElementById('result-link');
     
-    // 2. Show the result on screen
+    resultText.textContent = decodedText;
+    
+    // If the result looks like a URL, show it as a clickable link
+    if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
+        resultLink.href = decodedText;
+        resultLink.style.display = 'inline';
+    }
+
     document.getElementById('scan-result').style.display = 'block';
-    document.getElementById('result-text').innerHTML = `<a href="${decodedText}">${decodedText}</a>`;
-    
-    // (Later, we will add the Django fetch/AJAX request right here to save this data)
 }
+
 function onScanError(errorMessage) {
-  
+    // Ignore frequent seek errors
 }
 
-// Start the camera and scanning engine
 scanner.render(onScanSuccess, onScanError);
-
 </script>
-   
-
-
-
-</body>
-</html>
-
-
+{% endblock %}

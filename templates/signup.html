@@ -1,145 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <style>
-        /* Reset and Base Styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+{% extends 'base.html' %}
 
-        /* Card Container */
-        .signup-container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 400px;
-        }
+{% block title %}Sign Up - QR Menu Generator{% endblock %}
 
-        /* Typography */
-        h2 {
-            text-align: center;
-            color: #333333;
-            margin-bottom: 25px;
-            font-size: 28px;
-        }
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 col-xl-4">
+            <div class="glass-card">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-circle mb-3 border" style="width: 56px; height: 56px; font-size: 20px;">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <h2 class="h3 mb-1">Create Account</h2>
+                    <p class="text-muted small">Sign up to start generating menus</p>
+                </div>
 
-        /* Form Groups */
-        .form-group {
-            margin-bottom: 20px;
-        }
+                <form action="{% url 'signup' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" id="fullname" class="form-control" placeholder="John Doe" required name="fullname">
+                    </div>
 
-        .form-group:last-of-type {
-            margin-bottom: 25px;
-        }
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="name@example.com" required name="email">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Create a strong password" required name="password">
+                    </div>
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #666666;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Inputs */
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cccccc;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #764ba2;
-        }
-
-        /* Submit Button */
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.2s ease;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
-        }
-
-        /* Footer Text */
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666666;
-        }
-
-        .login-link a {
-            color: #764ba2;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="signup-container">
-        <h2>Create Account</h2>
-        
-        <form action="{% url 'signup' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="fullname">Full Name</label>
-                <input type="text" id="fullname" placeholder="Enter your full name" required name="fullname">
+                    <button type="submit" class="btn btn-gradient w-100 py-2.5 mt-2">
+                        <span>Sign Up</span>
+                        <i class="fa-solid fa-user-plus ms-2"></i>
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted small mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary text-decoration-none fw-semibold hover-underline" style="transition: color 0.2s;">Log In</a></p>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="Enter your email" required name="email">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Create a password" required name="password">
-            </div>
-
-            <button type="submit" class="btn-submit">Sign Up</button>
-        </form>
-        
-        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+        </div>
     </div>
+</div>
 
-</body>
-</html>
+<style>
+.hover-underline:hover {
+    color: var(--primary-hover) !important;
+    text-decoration: underline !important;
+}
+</style>
+{% endblock %}

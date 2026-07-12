@@ -1,4 +1,20 @@
 from django import forms
+
 class QRCodeForm(forms.Form):
-    restraunt_name = forms.CharField(label='Restaurant Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter restaurant name'}))
-    url = forms.URLField(label='Menu URL', max_length=200, widget=forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Enter menu URL'}))
+    label = forms.CharField(
+        label='Label',
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g. My Website, WiFi Password, Contact...'
+        })
+    )
+    content = forms.CharField(
+        label='Content (URL, text, or any data)',
+        max_length=2000,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter any URL, text, phone number, Wi-Fi credentials...',
+            'rows': 3,
+        })
+    )
