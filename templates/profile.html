@@ -101,15 +101,20 @@
     </div>
 
     <!-- QR Grid or Empty State -->
-    {% if qr_codes %}
-        <div class="qr-grid">
-            {% for qr_code in qr_codes %}
-            <div class="qr-card">
-                <img src="{{ qr_code.image.url }}" alt="QR Code for {{ qr_code.label }}">
-                <div class="qr-card-label" title="{{ qr_code.label }}">{{ qr_code.label }}</div>
-            </div>
-            {% endfor %}
-        </div>
+    {% for qr in qr_codes %}
+    <div class="qr-card">
+        <h5>{{ qr.label }}</h5>
+        
+        {% if qr.image %}
+            <img src="{{ qr.image.url }}" alt="QR Code" class="img-fluid">
+        {% else %}
+            <p class="text-muted">Content: {{ qr.data }}</p>
+        {% endif %}
+        
+    </div>
+{% empty %}
+    <p>No QR codes generated yet.</p>
+{% endfor %}
     {% else %}
         <div class="empty-state">
             <i class="fa-solid fa-qrcode"></i>
