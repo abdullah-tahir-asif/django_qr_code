@@ -105,11 +105,14 @@
     <div class="qr-card">
         <h5>{{ qr.label }}</h5>
         
-        {% if qr.image %}
-            <img src="{{ qr.image.url }}" alt="QR Code" class="img-fluid">
-        {% else %}
-            <p class="text-muted">Content: {{ qr.data }}</p>
-        {% endif %}
+      {% if qr.image %}
+    <img src="{{ qr.image.url }}" alt="QR Code" class="img-fluid">
+{% else %}
+    <div class="qr-canvas-container mb-2">
+        <canvas class="qr-render-canvas" data-content="{{ qr.data }}"></canvas>
+    </div>
+    <p class="text-muted small">Content: {{ qr.data }}</p>
+{% endif %}
         
     </div>
     {% empty %}
@@ -121,4 +124,36 @@
     {% endfor %}
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Find every empty canvas container on the dashboard
+        const canvases = document.querySelectorAll('.qr-render-canvas');
+        
+        canvases.forEach(canvas => {
+            const qrText = canvas.getAttribute('data-content');
+            
+            if (qrText) {
+                // Render the text string directly into a visual matrix array
+                QRCode.toCanvas(canvas, qrText, {
+                    width: 130,
+                    margin: 2,
+                    color: {
+                        dark: "#000000",
+                        light: "#ffffff"
+                    }
+                }, function (error) {
+                    if (error) console.error("Error rendering historical QR:", error);
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
 {% endblock %}
