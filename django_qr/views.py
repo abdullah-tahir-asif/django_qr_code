@@ -9,44 +9,55 @@ from django.contrib.auth.decorators import login_required
 from .models import QRCode
 from io import BytesIO
 from django.core.files.base import ContentFile
+import base64
+
+
+
 
 @login_required
 def generate_qr_code(request):
+    form = QRCodeForm()
+    
     if request.method == 'POST':
         form = QRCodeForm(request.POST)
         if form.is_valid():
             label = form.cleaned_data['label']
             content = form.cleaned_data['content']
-            qr=qrcode.make(content)
+            
+            # 1. Generate QR Code matrix in memory
+            qr = qrcode.QRCode(version=1, box_size=10, border=4)
+            qr.add_data(content)
+            qr.make(fit=True)
+            qr_image = qr.make_image(fill_color="black", back_color="white")
+            
+            # 2. Save image data straight into a byte stream buffer
             buffer = BytesIO()
-            qr.save(buffer, format='PNG')
-
-            file_name = label.replace(" ", "_").lower() + "_qr.png"
-
-            qr_record = QRCode(user=request.user, label=label, data=content)
-            qr_record.image.save(file_name, ContentFile(buffer.getvalue()), save=False)
+            qr_image.save(buffer, format='PNG')
+            buffer.seek(0)
+            
+            # 3. Encode the binary data to a Base64 string
+            image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            data_uri = f"data:image/png;base64,{image_base64}"
+            
+            # 4. Save metadata text string to the database (No local image files!)
+            qr_record = QRCode(
+                user=request.user,
+                label=label,
+                data=content
+            )
+            # If your model strictly requires a file path in an ImageField, 
+            # we can pass it an empty or placeholder string to satisfy validation.
             qr_record.save()
-
-
-
-            # Generate QR code from the content
-            # qr = qrcode.make(content)
-            # file_name = label.replace(" ", "_").lower() + "_qr.png"
-            # file_path = os.path.join(settings.MEDIA_ROOT, file_name)
-            # qr.save(file_path)
-
-            # qr_url = os.path.join(settings.MEDIA_URL, file_name)
-
+            
+            # 5. Pass the data string straight to your results template
             return render(request, 'qr_result.html', {
-                'file_name': file_name,
+                'file_name': label.replace(" ", "_").lower() + "_qr.png",
                 'label': label,
                 'content': content,
-                'qr_url': qr_record.image.url,
+                'qr_url': data_uri,  # This passes the raw image stream directly
             })
 
-    else:
-        form = QRCodeForm()
-        return render(request, 'generate_qr_code.html', {'form': form})
+    return render(request, 'generate_qr_code.html', {'form': form})
 
 
 def signup_view(request):
